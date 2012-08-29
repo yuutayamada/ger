@@ -49,6 +49,7 @@
     (with-temp-buffer
       (switch-to-buffer (get-buffer-create ger-buffer-name))
       (setq buffer-read-only nil)
+      (ger-mode)
       (erase-buffer)
       (insert content)
       (setq buffer-read-only t)
@@ -99,5 +100,11 @@
 (defun ger-fontify (word)
   (let* ((length (length word)))
     (put-text-property 0 length 'face 'warning word)))
+
+(defun ger-mode ()
+  (when (equal (buffer-name) ger-buffer-name)
+    (setq major-mode 'ger-mode
+          mode-name "GR")
+    (use-local-map ger-map)))
 
 (provide 'ger)

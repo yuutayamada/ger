@@ -27,9 +27,24 @@
 
 (require 'json)
 (require 'w3m)
+(require 'thingatpt)
+(require 'windows)
 
 (defvar ger-buffer-name "*ger*")
 (defvar ger-base-buffer "")
+(defvar ger-browse-fuction :w3m)
+
+(defvar ger-map
+  (lexical-let* ((map (make-sparse-keymap)))
+    (define-key map (kbd "q") 'ger-quit)
+    (define-key map (kbd "j") 'next-line)
+    (define-key map (kbd "k") 'previous-line)
+    (define-key map (kbd "n") 'scroll-up-command)
+    (define-key map (kbd "p") 'scroll-down-command)
+    (define-key map (kbd "l") 'ger-refer-to-html)
+    map))
+
+(defvar ger/windows-switch-window-number 2)
 
 (defun ger-quit ()
   (interactive)

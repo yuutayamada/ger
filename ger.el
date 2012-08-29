@@ -71,9 +71,14 @@
         with title and description and link
         for (subject . statement) in factors do
         (case subject
-          ('title       (setq title       statement))
+          ('title       (ger-fontify      statement)
+                        (setq title       statement))
           ('description (setq description statement))
           ('link        (setq link        statement)))
         finally return (mapconcat 'identity `(,title ,description ,link) "\n")))
+
+(defun ger-fontify (word)
+  (let* ((length (length word)))
+    (put-text-property 0 length 'face 'warning word)))
 
 (provide 'ger)

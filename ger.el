@@ -26,6 +26,7 @@
   (require 'cl))
 
 (require 'json)
+(require 'w3m)
 
 (defvar ger-buffer-name "*ger*")
 (defvar ger-base-buffer "")
@@ -63,6 +64,16 @@
     (with-temp-buffer
       (find-file rss-json)
       (buffer-string))))
+
+(defun ger-refer-to-html ()
+  (interactive)
+  (lexical-let* ((line (thing-at-point 'line))
+                 (url  (replace-regexp-in-string " " "" line)))
+    (if (eq ger-browse-fuction :w3m)
+        (progn
+          (ger-ather-window-or-split)
+          (w3m-browse-url url))
+      (browse-url url))))
 
 (defun ger-fetch-feeds ()
   (let* ((json (ger-get-buffer-string)))

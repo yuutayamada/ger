@@ -74,6 +74,30 @@ class RssGenerator
     @@record = JSON.pretty_generate(@@record)
   end
 
+  def to_time(text)
+    require 'date/format'
+    require 'time'
+
+    begin
+      if text == ""
+        Time.now
+      else
+        require 'date/format'
+        require 'time'
+
+        array = Date._parse(text, false).values_at(:year, :mon, :mday,
+                                                   :hour, :min, :sec,
+                                                   :zone, :wday)
+        time = Time.mktime(*array)
+        time
+      end
+    rescue NoMethodError
+      Time.now
+    rescue TypeError
+      Time.now
+    end
+  end
+
   def make_rss_from(url)
     if url
       rss_source = URI.parse(url)
@@ -81,13 +105,19 @@ class RssGenerator
       begin
         rss = RSS::Parser.parse(rss_source)
         if defined? rss.items
-          rss.items.each do |item|
+          rss.items.each_with_index do |item, index|
             def item.description() "" end unless defined? item.description
-            @@record << {
+            subset = {
               title:       item.title,
-              description: item.description.to_s.gsub(/<\/?[^>]*>/, ""),
-              link:        item.link
+              description: item.description.to_s.gsub(/<\/?[^>]*>| +|&nbsp;|\n\n+/, ""),
+              link:        item.link,
+              date:        to_time(item.date.to_s)
             }
+            if Time.now.-(60*60*24*2) < subset[:date]
+              @@record << subset
+            else
+              @@record.unshift subset
+            end
           end
         end
       rescue RSS::InvalidRSSError

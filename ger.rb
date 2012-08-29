@@ -127,6 +127,9 @@ class RssGenerator
   end
 
   def output()
+    if 0 == @@record.length
+      self.generate()
+    end
     print @@record
   end
 

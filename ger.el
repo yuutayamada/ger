@@ -39,6 +39,7 @@
 ;;;###autoload
 (defun ger ()
   (interactive)
+  (win-switch-to-window 1 ger/windows-switch-window-number)
   (ger-ather-window-or-split)
   (setq ger-base-buffer (buffer-name))
   (ger-make-buffer (ger-fetch-feeds)))
@@ -47,8 +48,10 @@
   (save-current-buffer
     (with-temp-buffer
       (switch-to-buffer (get-buffer-create ger-buffer-name))
+      (setq buffer-read-only nil)
       (erase-buffer)
       (insert content)
+      (setq buffer-read-only t)
       (goto-char (point-min)))))
 
 (defun ger-ather-window-or-split ()

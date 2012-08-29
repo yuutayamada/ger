@@ -30,6 +30,11 @@
 (defvar ger-buffer-name "*ger*")
 (defvar ger-base-buffer "")
 
+(defun ger-quit ()
+  (interactive)
+  (kill-buffer ger-buffer-name)
+  (switch-to-buffer ger-base-buffer))
+
 ;;;###autoload
 (defun ger ()
   (interactive)

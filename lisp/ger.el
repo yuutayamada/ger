@@ -171,7 +171,9 @@
   (loop with format
         with ti and de and li and dt
         for (title description link date) in (list feed) do
-        (setq ti (concat "* " title)
+        (setq ti (concat "* " title
+                         (unless (string-match "\\w" description)
+                           "<E>"))
               de (concat "** " description)
               li (concat "** link [[" link "][...]]")
               dt (concat "** " date)

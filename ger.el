@@ -33,6 +33,7 @@
 (defvar ger-buffer-name "*ger*")
 (defvar ger-base-buffer "")
 (defvar ger-browse-fuction :w3m)
+(defvar ger-ruby-exe-path "~/bb/work/ger/bin/ger")
 
 (defvar ger-map
   (lexical-let* ((map (make-sparse-keymap)))
@@ -138,5 +139,11 @@
     (setq major-mode 'ger-mode
           mode-name "GR")
     (use-local-map ger-map)))
+
+(defun ger-reload ()
+  (interactive)
+  (async-shell-command
+   (concat
+    ger-ruby-exe-path " reload")))
 
 (provide 'ger)

@@ -120,7 +120,7 @@
         with title and description and link and date
         for (subject . statement) in factors do
         (case subject
-          ('title       (ger-fontify      statement)
+          ('title       (ger-fontify      statement 'Info-title-3-face)
                         (setq title       statement))
           ('description (setq description statement))
           ('link        (ger-fontify      statement 'link)

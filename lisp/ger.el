@@ -103,8 +103,8 @@
 (defun ger ()
   (interactive)
   (when (require 'windows nil t)
-    (win-switch-to-window 1 ger/windows-switch-window-number))
-  (ger-ather-window-or-split)
+    (win-switch-to-window 1 ger/windows-switch-window-number)
+    (delete-other-windows))
   (setq ger-base-buffer (buffer-name))
   (ger-make-buffer (ger-fetch-feeds)))
 

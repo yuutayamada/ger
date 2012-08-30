@@ -53,10 +53,21 @@
     (define-key map (kbd "q") 'ger-quit)
     (define-key map (kbd "j") 'ger-next-subject)
     (define-key map (kbd "k") 'ger-previous-subject)
+    (define-key map (kbd "t") 'org-shifttab)
+    (define-key map (kbd "h") 'ger-hide-org-buffer)
+    (define-key map (kbd "o") 'ger-open-org-buffer)
     (define-key map (kbd "n") 'scroll-up-command)
     (define-key map (kbd "p") 'scroll-down-command)
     (define-key map (kbd "l") 'ger-refer-to-html)
     map))
+
+(defun ger-hide-org-buffer ()
+  (interactive)
+  (org-overview))
+
+(defun ger-open-org-buffer ()
+  (interactive)
+  (show-all))
 
 (defun ger-next-subject ()
   (interactive)

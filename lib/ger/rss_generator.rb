@@ -24,6 +24,21 @@ module Ger
         make_rss_from(url) if url =~ /\.xml$/
       end
       @@record = JSON.pretty_generate(@@record)
+      @@record = sort_json(@@record)
+    end
+
+    def sort_json(record)
+      json = JSON.parse(record)
+      time_and_index = []
+      json.to_ary.each_with_index do |h, index|
+        time_and_index << [h["date"], index]
+      end
+      sort_index = time_and_index.sort_by {|a| a }
+      sorted = []
+      sort_index.reverse.each_with_index do |time_and_index, this_index|
+        sorted[this_index] = json.to_ary[time_and_index[1]]
+      end
+      JSON.pretty_generate(sorted)
     end
 
     def to_time(text)

@@ -64,7 +64,7 @@ module Ger
               subset = {
                 title:       self.format(item.title.to_s),
                 description: self.format(item.description.to_s),
-                link:        item.link.to_s, #self.format(item.link.to_s),
+                link:        self.format(item.link.to_s, true),
                 date:        to_time(item.date.to_s)
               }
               if Time.now.-(n_days_ago(2)) < subset[:date]
@@ -78,11 +78,15 @@ module Ger
       end
     end
 
-    def format(description)
-      description.gsub!(/&nbsp;/, " ")
-      description.gsub!(/&amp;/, "&")
-      description.gsub!(/<\/?[^>]*>|\n\n+/, "")
-      description.gsub!(/  +/, " ")
+    def format(description, link=false)
+      if link
+        description = description.match(/http.+/).to_s.chomp('"')
+      else
+        description.gsub!(/&nbsp;/, " ")
+        description.gsub!(/&amp;/, "&")
+        description.gsub!(/<\/?[^>]*>|\n\n+/, "")
+        description.gsub!(/  +/, " ")
+      end
       description
     end
 

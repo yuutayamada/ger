@@ -113,7 +113,7 @@
 
 (defun ger-extract-subject (factors)
   (loop with content = '()
-        with title and description and link
+        with title and description and link and date
         for (subject . statement) in factors do
         (case subject
           ('title       (ger-fontify      statement)
@@ -121,6 +121,9 @@
           ('description (setq description statement))
           ('link        (ger-fontify      statement 'link)
                         (setq link        statement))
+          ('date        (setq date        statement)))
+        finally return (mapconcat
+                        'identity `(,title ,description ,link ,date) "\n")))
 
 (defun ger-fontify (word &optional face)
   (let* ((length (length word)))

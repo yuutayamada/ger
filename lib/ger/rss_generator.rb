@@ -52,8 +52,7 @@ module Ger
           array = Date._parse(text, false).values_at(:year, :mon, :mday,
                                                      :hour, :min, :sec,
                                                      :zone, :wday)
-          time = Time.mktime(*array)
-          time
+          Time.mktime(*array)
         end
       rescue NoMethodError
         n_days_ago(10)

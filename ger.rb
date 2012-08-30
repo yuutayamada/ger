@@ -108,9 +108,9 @@ class RssGenerator
           rss.items.each_with_index do |item, index|
             def item.description() "" end unless defined? item.description
             subset = {
-              title:       item.title,
-              description: item.description.to_s.gsub(/<\/?[^>]*>| +|&nbsp;|\n\n+/, ""),
-              link:        item.link,
+              title:       self.format(item.title.to_s),
+              description: self.format(item.description.to_s),
+              link:        self.format(item.link.to_s),
               date:        to_time(item.date.to_s)
             }
             if Time.now.-(60*60*24*2) < subset[:date]
@@ -124,6 +124,12 @@ class RssGenerator
         rss = RSS::Parser.parse(rss_source, false)
       end
     end
+  end
+
+  def format(description)
+    description.gsub!(/<\/?[^>]*>|&nbsp;|\n\n+/, "")
+    description.gsub!(/  +/, " ")
+    description
   end
 
   def output()

@@ -41,14 +41,14 @@ module Ger
           time
         end
       rescue NoMethodError
-        ten_days_ago
+        n_days_ago(10)
       rescue TypeError
-        ten_days_ago
+        n_days_ago(10)
       end
     end
 
     def n_days_ago(n)
-      60 * 60 * 24 * n.to_i
+      Time.now.-(60 * 60 * 24 * n.to_i)
     end
 
     def make_rss_from(url)
@@ -67,7 +67,7 @@ module Ger
                 link:        self.format(item.link.to_s, true),
                 date:        to_time(item.date.to_s)
               }
-              if Time.now.-(n_days_ago(2)) < subset[:date]
+              if n_days_ago(2) < subset[:date]
                 @@record.unshift subset
               end
             end

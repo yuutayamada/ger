@@ -58,6 +58,7 @@
     (define-key map (kbd "o") 'ger-open-org-buffer)
     (define-key map (kbd "n") 'scroll-up-command)
     (define-key map (kbd "p") 'scroll-down-command)
+    (define-key map (kbd "i") 'org-cycle)
     (define-key map (kbd "l") 'ger-refer-to-html)
     map))
 

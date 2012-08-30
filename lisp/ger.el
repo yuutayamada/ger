@@ -72,13 +72,20 @@
 
 (defun ger-next-subject ()
   (interactive)
-  (re-search-forward "^----" nil t))
+  (if (not (eq ger-format-style :org))
+      (re-search-forward "^----" nil t)
+    (re-search-forward "^*[^*]" nil t)
+    (re-search-forward "^*[^*]" nil t)
+    (beginning-of-line)))
 
 (defun ger-previous-subject ()
   (interactive)
-  (re-search-backward "^----" nil t)
-  (re-search-backward "^----" nil t)
-  (end-of-line))
+  (if (eq ger-format-style :org)
+      (re-search-backward "^*[^*]" nil t)
+    (re-search-backward "^\\\\*" nil t)
+    (re-search-backward "^----" nil t)
+    (re-search-backward "^----" nil t)
+    (end-of-line)))
 
 (defvar ger/windows-switch-window-number 2)
 

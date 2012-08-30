@@ -26,9 +26,10 @@
   (require 'cl))
 
 (require 'json)
-(require 'w3m)
 (require 'thingatpt)
-(require 'windows)
+
+(require 'windows  nil t)
+(require 'w3m      nil t)
 
 (defvar ger-buffer-name "*ger*")
 (defvar ger-base-buffer "")
@@ -65,7 +66,8 @@
 ;;;###autoload
 (defun ger ()
   (interactive)
-  (win-switch-to-window 1 ger/windows-switch-window-number)
+  (when (require 'windows nil t)
+    (win-switch-to-window 1 ger/windows-switch-window-number))
   (ger-ather-window-or-split)
   (setq ger-base-buffer (buffer-name))
   (ger-make-buffer (ger-fetch-feeds)))
@@ -103,7 +105,8 @@
       (beginning-of-line)
       (if (not (looking-at "http"))
           (re-search-forward "^http://" nil nil)
-        (if (eq ger-browse-fuction :w3m)
+        (if (and (eq ger-browse-fuction :w3m)
+                 (require 'w3m nil t))
             (progn
               (ger-ather-window-or-split)
               (w3m-browse-url url))

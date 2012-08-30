@@ -22,6 +22,14 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;; Usage
+;; example
+;; (let* ((ger-directory "~/.emacs.d/lisp/ger/")) <- set your ger directory
+;;   (add-to-list 'load-path (concat ger-directory "lisp/"))
+;;   (setq ger-ruby-exe-path (concat ger-directory "bin/ger"))
+;;   (autoload 'ger "ger")
+;;   (global-set-key (kbd "C-S-i") 'ger))
+
 (eval-when-compile
   (require 'cl))
 
@@ -34,7 +42,7 @@
 (defvar ger-buffer-name "*ger*")
 (defvar ger-base-buffer "")
 (defvar ger-browse-fuction :w3m)
-(defvar ger-ruby-exe-path "~/bb/work/ger/bin/ger")
+(defvar ger-ruby-exe-path "")
 
 (defvar ger-map
   (lexical-let* ((map (make-sparse-keymap)))

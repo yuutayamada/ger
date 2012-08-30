@@ -82,9 +82,6 @@ class RssGenerator
       if text == ""
         Time.now
       else
-        require 'date/format'
-        require 'time'
-
         array = Date._parse(text, false).values_at(:year, :mon, :mday,
                                                    :hour, :min, :sec,
                                                    :zone, :wday)

@@ -77,7 +77,7 @@ class RssGenerator
   def to_time(text)
     require 'date/format'
     require 'time'
-
+    ten_days_ago = Time.now.-(60*60*24*10)
     begin
       if text == ""
         Time.now
@@ -92,9 +92,9 @@ class RssGenerator
         time
       end
     rescue NoMethodError
-      Time.now
+      ten_days_ago
     rescue TypeError
-      Time.now
+      ten_days_ago
     end
   end
 

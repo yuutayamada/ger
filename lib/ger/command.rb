@@ -33,10 +33,11 @@ module Ger
     end
 
     desc 'reload', 'Update google-reader-subscriptions.xml'
-    method_option "directory", type: :string, default: false, aliases: "--dict"
+    method_option "directory", type: :string, default: false, aliases: "-d"
+    method_option "google-xml-dir", type: :string, default: false, aliases: "-g"
     def reload()
-      init(options["directory"])
-      @@rss.reload()
+      init(options["google-xml-dir"])
+      @@rss.reload(options["directory"])
     end
 
     desc 'status', 'show google_reader_xml_path'
@@ -47,9 +48,7 @@ module Ger
     private
 
     def init(option=false)
-      if option && option["directory"]
-        @google_reader_xml_path = opt["directory"]
-      end
+      @google_reader_xml_path = option["google-xml-dir"] if option && option["google-xml-dir"]
       @@rss = RssGenerator.new(create_xml_enum(get_xmls, true))
     end
 

@@ -108,8 +108,9 @@ module Ger
       FileUtils.rm(file_name)
     end
 
-    def reload()
-      file_name = @@file_name
+    def reload(directory)
+      specific_dir = directory || Dir.home
+      file_name = specific_dir + "/" + @@file_name
       backup(file_name) if File.exist?(file_name)
       self.generate()
       open(file_name, "w") do |fp|

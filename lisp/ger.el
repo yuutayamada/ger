@@ -136,6 +136,7 @@
 
 (defun ger/org-browse-link ()
   (when (eq major-mode 'org-mode)
+    (org-show-subtree)
     (org-next-link)
     (save-current-buffer
       (beginning-of-line)

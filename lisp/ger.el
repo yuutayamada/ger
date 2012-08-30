@@ -36,6 +36,7 @@
 
 (require 'json)
 (require 'thingatpt)
+(require 'org)
 
 (require 'windows  nil t)
 (require 'w3m      nil t)
@@ -45,6 +46,7 @@
 (defvar ger-browse-fuction :w3m)
 (defvar ger-ruby-exe-path "")
 (defvar ger-registering-dir nil)
+(defvar ger-format-style :org)
 
 (defvar ger-mode-map
   (lexical-let* ((map (make-sparse-keymap)))
@@ -82,15 +84,18 @@
   (setq ger-base-buffer (buffer-name))
   (ger-make-buffer (ger-fetch-feeds)))
 
+(defun ger-mode-on ()
+  (if (not (eq ger-format-style :org))
+      (ger-mode)
+    (org-mode)
+    (ger-minor-mode t)))
+
 (defun ger-make-buffer (content)
   (save-current-buffer
     (with-temp-buffer
       (switch-to-buffer (get-buffer-create ger-buffer-name))
       (setq buffer-read-only nil)
-      (if nil
-          (ger-mode)
-        (org-mode)
-        (ger-minor-mode t))
+      (ger-mode-on)
       (erase-buffer)
       (insert content)
       (setq buffer-read-only t)
@@ -110,20 +115,31 @@
       (find-file rss-json)
       (buffer-string))))
 
-(defun ger-refer-to-html ()
-  (interactive)
-  (lexical-let* ((line (thing-at-point 'line))
-                 (url  (replace-regexp-in-string " " "" line)))
+(defun ger-org-next-link-or-browse ()
+  (when (eq major-mode 'org-mode)
+    (org-next-link)
     (save-current-buffer
       (beginning-of-line)
-      (if (not (looking-at "http"))
-          (re-search-forward "^http://" nil nil)
-        (if (and (eq ger-browse-fuction :w3m)
-                 (require 'w3m nil t))
-            (progn
-              (ger-ather-window-or-split)
-              (w3m-goto-url url))
-          (browse-url url))))))
+      (when (looking-at "** link.+")
+        (org-next-link)
+        (org-return)))))
+
+(defun ger-refer-to-html ()
+  (interactive)
+  (if (eq major-mode 'org-mode)
+      (ger-org-next-link-or-browse)
+    (lexical-let* ((line (thing-at-point 'line))
+                   (url  (replace-regexp-in-string " " "" line)))
+      (save-current-buffer
+        (beginning-of-line)
+        (if (not (looking-at "http"))
+            (re-search-forward "^http://" nil nil)
+          (if (and (eq ger-browse-fuction :w3m)
+                   (require 'w3m nil t))
+              (progn
+                (ger-ather-window-or-split)
+                (w3m-goto-url url))
+            (browse-url url)))))))
 
 (defun ger-fetch-feeds ()
   (let* ((json (ger-get-buffer-string)))

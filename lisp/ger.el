@@ -62,6 +62,7 @@
     (define-key map (kbd "c") 'scroll-down-command)
     (define-key map (kbd "i") 'org-cycle)
     (define-key map (kbd "l") 'ger-refer-to-html)
+    (define-key map (kbd "R") 'ger-reload)
     map))
 
 (defun ger-hide-org-buffer ()

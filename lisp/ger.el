@@ -122,7 +122,7 @@
                  (require 'w3m nil t))
             (progn
               (ger-ather-window-or-split)
-              (w3m-browse-url url))
+              (w3m-goto-url url))
           (browse-url url))))))
 
 (defun ger-fetch-feeds ()

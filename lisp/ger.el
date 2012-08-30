@@ -87,7 +87,10 @@
     (with-temp-buffer
       (switch-to-buffer (get-buffer-create ger-buffer-name))
       (setq buffer-read-only nil)
-      (ger-mode)
+      (if nil
+          (ger-mode)
+        (org-mode)
+        (ger-minor-mode t))
       (erase-buffer)
       (insert content)
       (setq buffer-read-only t)
@@ -129,6 +132,17 @@
           collect (ger-extract-subject factors) into result
           finally return (mapconcat 'identity result "\n----\n"))))
 
+(defun ger-format (feed)
+  (loop with format
+        with ti and de and li and dt
+        for (title description link date) in (list feed) do
+        (setq ti (concat "* " title)
+              de (concat "** " description)
+              li (concat "** link [[" link "][...]]")
+              dt (concat "** " date)
+              format (list ti de li dt))
+        finally return (mapconcat 'identity format "\n")))
+
 (defun ger-extract-subject (factors)
   (loop with content = '()
         with title and description and link and date
@@ -140,12 +154,16 @@
           ('link        (ger-fontify      statement 'link)
                         (setq link        statement))
           ('date        (setq date        statement)))
-        finally return (mapconcat
-                        'identity `(,title ,description ,link ,date) "\n")))
+        finally return (ger-format `(,title ,description ,link ,date))))
 
 (defun ger-fontify (word &optional face)
   (let* ((length (length word)))
     (put-text-property 0 length 'face (if face face 'warning) word)))
+
+(easy-mmode-define-minor-mode
+ ger-minor-mode
+ " Ger " nil " Ger"
+ (copy-keymap ger-mode-map))
 
 (defun ger-mode ()
   (interactive)

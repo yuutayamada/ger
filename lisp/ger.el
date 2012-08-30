@@ -26,7 +26,8 @@
 ;; example
 ;; (let* ((ger-directory "~/.emacs.d/lisp/ger/")) <- set your ger directory
 ;;   (add-to-list 'load-path (concat ger-directory "lisp/"))
-;;   (setq ger-ruby-exe-path (concat ger-directory "bin/ger"))
+;;   (setq ger-ruby-exe-path (concat ger-directory "bin/ger")
+;;         ger-registering-dir "~/")
 ;;   (autoload 'ger "ger")
 ;;   (global-set-key (kbd "C-S-i") 'ger))
 
@@ -43,6 +44,7 @@
 (defvar ger-base-buffer "")
 (defvar ger-browse-fuction :w3m)
 (defvar ger-ruby-exe-path "")
+(defvar ger-registering-dir nil)
 
 (defvar ger-map
   (lexical-let* ((map (make-sparse-keymap)))
@@ -99,7 +101,7 @@
   (other-window 1))
 
 (defun ger-get-buffer-string ()
-  (let* ((rss-json "~/myrss.json")
+  (let* ((rss-json (concat ger-registering-dir ".ger.json"))
          (buffer-name (get-file-buffer rss-json)))
     (with-temp-buffer
       (find-file rss-json)
@@ -153,8 +155,11 @@
 
 (defun ger-reload ()
   (interactive)
-  (async-shell-command
-   (concat
-    ger-ruby-exe-path " reload")))
+  (let* ((command (concat ger-ruby-exe-path " reload"))
+         dir)
+    (when ger-registering-dir
+      (setq dir (concat " --directory=" (cd-absolute ger-registering-dir))
+            command (concat command dir)))
+    (async-shell-command command)))
 
 (provide 'ger)

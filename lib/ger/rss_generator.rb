@@ -10,7 +10,7 @@ module Ger
   class RssGenerator
     @@test_url = 'http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml'
     @@record ||= []
-    @@file_name =  Dir.home + "/myrss.json"
+    @@file_name =  ".ger.json"
 
     def initialize(sources = {test: @@test_url})
       @sources = sources

@@ -1,7 +1,8 @@
 # Installation
 ## To install from command line
-cd  YOUR-INSTALLATION-DIRECTORY
-git clone https://github.com/yuutayamada/ger
+
+    cd  YOUR-INSTALLATION-DIRECTORY
+    git clone https://github.com/yuutayamada/ger
 
 ## Paste your .emacs .etc..
 

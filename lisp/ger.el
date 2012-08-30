@@ -95,7 +95,9 @@
 (defun ger-quit ()
   (interactive)
   (kill-buffer ger-buffer-name)
-  (switch-to-buffer ger-base-buffer))
+  (switch-to-buffer ger-base-buffer)
+  (when (require 'windows nil t)
+    (win-toggle-window)))
 
 ;;;###autoload
 (defun ger ()

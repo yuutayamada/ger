@@ -119,12 +119,12 @@
           ('title       (ger-fontify      statement)
                         (setq title       statement))
           ('description (setq description statement))
-          ('link        (setq link        statement)))
-        finally return (mapconcat 'identity `(,title ,description ,link) "\n")))
+          ('link        (ger-fontify      statement 'link)
+                        (setq link        statement))
 
-(defun ger-fontify (word)
+(defun ger-fontify (word &optional face)
   (let* ((length (length word)))
-    (put-text-property 0 length 'face 'warning word)))
+    (put-text-property 0 length 'face (if face face 'warning) word)))
 
 (defun ger-mode ()
   (when (equal (buffer-name) ger-buffer-name)

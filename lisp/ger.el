@@ -1,5 +1,5 @@
 ;;; -*- coding: utf-8 -*-
-;;; ger.el --- Google Reader front-end for Emacs
+;;; ger.el --- Emacs front-end for Google Reader
 
 ;; Copyright (C) 2012 by Yuta Yamada
 

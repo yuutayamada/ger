@@ -46,7 +46,7 @@
 (defvar ger-ruby-exe-path "")
 (defvar ger-registering-dir nil)
 
-(defvar ger-map
+(defvar ger-mode-map
   (lexical-let* ((map (make-sparse-keymap)))
     (define-key map (kbd "q") 'ger-quit)
     (define-key map (kbd "j") 'ger-next-subject)
@@ -148,10 +148,11 @@
     (put-text-property 0 length 'face (if face face 'warning) word)))
 
 (defun ger-mode ()
+  (interactive)
   (when (equal (buffer-name) ger-buffer-name)
     (setq major-mode 'ger-mode
           mode-name "GR")
-    (use-local-map ger-map)))
+    (use-local-map ger-mode-map)))
 
 (defun ger-reload ()
   (interactive)

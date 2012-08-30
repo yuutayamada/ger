@@ -37,12 +37,16 @@
 (defvar ger-map
   (lexical-let* ((map (make-sparse-keymap)))
     (define-key map (kbd "q") 'ger-quit)
-    (define-key map (kbd "j") 'next-line)
     (define-key map (kbd "k") 'previous-line)
+    (define-key map (kbd "j") 'ger-next-subject)
     (define-key map (kbd "n") 'scroll-up-command)
     (define-key map (kbd "p") 'scroll-down-command)
     (define-key map (kbd "l") 'ger-refer-to-html)
     map))
+
+(defun ger-next-subject ()
+  (interactive)
+  (re-search-forward "^----" nil t))
 
 (defvar ger/windows-switch-window-number 2)
 

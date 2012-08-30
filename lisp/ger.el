@@ -127,7 +127,7 @@
       (find-file rss-json)
       (buffer-string))))
 
-(defun ger-org-next-link-or-browse ()
+(defun ger/org-browse-link ()
   (when (eq major-mode 'org-mode)
     (org-next-link)
     (save-current-buffer
@@ -139,7 +139,7 @@
 (defun ger-refer-to-html ()
   (interactive)
   (if (eq major-mode 'org-mode)
-      (ger-org-next-link-or-browse)
+      (ger/org-browse-link)
     (lexical-let* ((line (thing-at-point 'line))
                    (url  (replace-regexp-in-string " " "" line)))
       (save-current-buffer

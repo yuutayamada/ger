@@ -21,6 +21,13 @@ module Ger
     def generate()
         make_rss_from(url) if url =~ /\.xml$/
         @sources.each_with_index do |url, index|
+    def reload(directory)
+      specified_dir = directory || Dir.home
+      @rss_path = specified_dir + "/" + @@file_name
+      backup(@rss_path) if File.exist?(@rss_path)
+      self.generate()
+      open(@rss_path, "w:UTF-8") do |fp|
+        fp.write @@record
       end
       @@record = JSON.pretty_generate(@@record)
       @@record = sort_json(@@record)
@@ -123,16 +130,6 @@ module Ger
       end
       FileUtils.cp(file_name, file_name+"_bk")
       FileUtils.rm(file_name)
-    end
-
-    def reload(directory)
-      specific_dir = directory || Dir.home
-      file_name = specific_dir + "/" + @@file_name
-      backup(file_name) if File.exist?(file_name)
-      self.generate()
-      open(file_name, "w") do |fp|
-        fp.write @@record
-      end
     end
   end
 end

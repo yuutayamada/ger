@@ -14,6 +14,7 @@ module Ger
 
     def initialize(sources = {test: @@test_url})
       @sources = sources.flatten
+      @rss_path
     end
 
     attr_accessor :sources
@@ -40,8 +41,6 @@ module Ger
       open(@rss_path, "w:UTF-8") do |fp|
         fp.write @@record
       end
-      @@record = JSON.pretty_generate(@@record)
-      @@record = sort_json(@@record)
     end
 
     def sort_json_by(item, record)

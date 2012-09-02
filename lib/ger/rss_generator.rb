@@ -13,15 +13,14 @@ module Ger
     @@file_name =  ".ger.json"
 
     def initialize(sources = {test: @@test_url})
-      @sources = sources
+      @sources = sources.flatten
     end
 
     attr_accessor :sources
 
     def generate()
-      sources = @sources.flatten
-      sources.each_with_index do |url, index|
         make_rss_from(url) if url =~ /\.xml$/
+        @sources.each_with_index do |url, index|
       end
       @@record = JSON.pretty_generate(@@record)
       @@record = sort_json(@@record)

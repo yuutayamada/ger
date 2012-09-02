@@ -66,29 +66,26 @@ module Ger
     end
 
     def make_rss_from(url)
-      if url
-        rss_source = URI.parse(url)
-        rss = nil
-
-        begin
-          rss = RSS::Parser.parse(rss_source)
-          if defined? rss.items
-            rss.items.each_with_index do |item, index|
-              def item.description() "" end unless defined? item.description
-              subset = {
-                title:       self.format(item.title.to_s),
-                description: self.format(item.description.to_s),
-                link:        self.format(item.link.to_s, true),
-                date:        to_time(item.date.to_s)
-              }
-              if n_days_ago(2) < subset[:date]
-                @@record.unshift subset
-              end
-            end
+      begin
+        source = URI.parse(url)
+        rss = RSS::Parser.parse(source)
+        rss.items.each do |item|
+          def item.description() "" end unless defined? item.description
+          subset = {
+            title:       self.format(item.title.to_s),
+            description: self.format(item.description.to_s),
+            link:        self.format(item.link.to_s, true),
+            date:        to_time(item.date.to_s),
+          }
+          if n_days_ago(2) < subset[:date]
+            @@record << subset
           end
-        rescue RSS::InvalidRSSError
-          rss = RSS::Parser.parse(rss_source, false)
         end
+      rescue NoMethodError => e
+        puts e.message + "\n  URL: " + url
+      rescue RSS::InvalidRSSError => e
+        puts e.message + "\n  URL: " + url
+        rss = RSS::Parser.parse(source, false)
       end
     end
 

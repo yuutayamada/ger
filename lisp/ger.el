@@ -61,7 +61,7 @@
     (define-key map (kbd "v") 'scroll-up-command)
     (define-key map (kbd "c") 'scroll-down-command)
     (define-key map (kbd "i") 'org-cycle)
-    (define-key map (kbd "l") 'ger-refer-to-html)
+    (define-key map (kbd "l") 'ger-goto-url)
     (define-key map (kbd "R") 'ger-reload)
     map))
 
@@ -149,7 +149,7 @@
         (org-next-link)
         (org-return)))))
 
-(defun ger-refer-to-html ()
+(defun ger-goto-url ()
   (interactive)
   (if (eq major-mode 'org-mode)
       (ger/org-browse-link)

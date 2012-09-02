@@ -19,8 +19,19 @@ module Ger
     attr_accessor :sources
 
     def generate()
-        make_rss_from(url) if url =~ /\.xml$/
+      begin
+        current_url_and_index = ""
         @sources.each_with_index do |url, index|
+          make_rss_from(url) if url =~ /\.xml$/
+        end
+        @@record = JSON.pretty_generate(@@record)
+        @@record = sort_json_by("date", @@record)
+        puts "Done! spawned Rss to #{@rss_path}"
+      rescue Encoding::UndefinedConversionError => e
+        puts e.message + current_url_and_index
+      end
+    end
+
     def reload(directory)
       specified_dir = directory || Dir.home
       @rss_path = specified_dir + "/" + @@file_name

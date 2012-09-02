@@ -89,16 +89,18 @@ module Ger
       end
     end
 
-    def format(description, link=false)
+    def format(stetement, link=false)
       if link
-        description = description.match(/http.+/).to_s.chomp('"')
+        stetement = stetement.match(/http.+/).to_s.chomp('"')
       else
-        description.gsub!(/&nbsp;/, " ")
-        description.gsub!(/&amp;/, "&")
-        description.gsub!(/<\/?[^>]*>|\n\n+/, "")
-        description.gsub!(/  +/, " ")
+        stetement.gsub!(/\"/, "")
+        stetement.gsub!(/&nbsp;/, " ")
+        stetement.gsub!(/&amp;/, "&")
+        stetement.gsub!(/<\/?[^>]*>|\n\n+/, "")
+        stetement.gsub!(/  +/, " ")
+        stetement.sub!(/^\n ?/, "")
       end
-      description
+      stetement
     end
 
     def output()

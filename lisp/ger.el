@@ -171,7 +171,7 @@
     (loop with result = '()
           for factors across (json-read-from-string json)
           collect (ger-extract-subject factors) into result
-          finally return (mapconcat 'identity result "\n----\n"))))
+          finally return (mapconcat 'identity result "\n"))))
 
 (defun ger-format (feed)
   (loop with format

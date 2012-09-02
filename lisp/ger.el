@@ -43,7 +43,7 @@
 
 (defvar ger-buffer-name "*ger*")
 (defvar ger-base-buffer "")
-(defvar ger-browse-fuction :w3m)
+(defvar ger-browse-function :w3m)
 (defvar ger-ruby-exe-path "")
 (defvar ger-registering-dir nil)
 (defvar ger-format-style :org)
@@ -159,7 +159,7 @@
         (beginning-of-line)
         (if (not (looking-at "http"))
             (re-search-forward "^http://" nil nil)
-          (if (and (eq ger-browse-fuction :w3m)
+          (if (and (eq ger-browse-function :w3m)
                    (require 'w3m nil t))
               (progn
                 (ger-ather-window-or-split)

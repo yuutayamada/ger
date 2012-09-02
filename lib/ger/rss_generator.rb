@@ -26,16 +26,17 @@ module Ger
       @@record = sort_json(@@record)
     end
 
-    def sort_json(record)
+    def sort_json_by(item, record)
       json = JSON.parse(record)
-      time_and_index = []
-      json.to_ary.each_with_index do |h, index|
-        time_and_index << [h["date"], index]
+      item_and_index = []
+      json.to_ary.each_with_index do |subject, index|
+        item_and_index << [subject[item], index]
       end
-      sort_index = time_and_index.sort_by {|a| a }
+      sorted_item_and_index = item_and_index.sort_by {|item| item}.reverse # !> shadowing outer local variable - item
       sorted = []
-      sort_index.reverse.each_with_index do |time_and_index, this_index|
-        sorted[this_index] = json.to_ary[time_and_index[1]]
+      sorted_item_and_index.each_with_index do |item_and_index, this_index| # !> shadowing outer local variable - item_and_index
+        content            = json.to_ary[item_and_index.last]
+        sorted[this_index] = content
       end
       JSON.pretty_generate(sorted)
     end

@@ -77,7 +77,8 @@
   (interactive)
   (if (not (eq ger-format-style :org))
       (re-search-forward "^----" nil t)
-    (re-search-forward "^*[^*]" nil t)
+    (if (looking-at "^*[^*]")
+        (re-search-forward "^*[^*]" nil t))
     (re-search-forward "^*[^*]" nil t)
     (beginning-of-line)))
 

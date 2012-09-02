@@ -48,6 +48,8 @@
 (defvar ger-registering-dir nil)
 (defvar ger-format-style :org)
 
+(defvar ger/windows-switch-window-number 2)
+
 (defvar ger-mode-map
   (lexical-let* ((map (make-sparse-keymap)))
     (define-key map (kbd "q") 'ger-quit)
@@ -83,8 +85,6 @@
 (defun ger-previous-subject ()
   (interactive)
   (re-search-backward "^*[^*]" nil t))
-
-(defvar ger/windows-switch-window-number 2)
 
 (defun ger-quit ()
   (interactive)

@@ -62,16 +62,11 @@ module Ger
     def to_time(text)
       require 'date/format'
       require 'time'
-      ten_days_ago = Time.now.-(60*60*24*10)
       begin
-        if text == ""
-          Time.now
-        else
-          array = Date._parse(text, false).values_at(:year, :mon, :mday,
-                                                     :hour, :min, :sec,
-                                                     :zone, :wday)
-          Time.mktime(*array)
-        end
+        array = Date._parse(text, false).values_at(:year, :mon, :mday,
+                                                   :hour, :min, :sec,
+                                                   :zone, :wday)
+        Time.mktime(*array)
       rescue NoMethodError
         n_days_ago(10)
       rescue TypeError

@@ -50,6 +50,8 @@
 
 (defvar ger/windows-switch-window-number 2)
 
+(defvar ger/org-state :show-all)
+
 (defvar ger-mode-map
   (lexical-let* ((map (make-sparse-keymap)))
     (define-key map (kbd "q") 'ger-quit)
@@ -67,13 +69,13 @@
     (define-key map (kbd "R") 'ger-reload)
     map))
 
-(defun ger-hide-org-buffer ()
+(defun ger-toggle-show-and-overview ()
   (interactive)
-  (org-overview))
-
-(defun ger-open-org-buffer ()
-  (interactive)
-  (show-all))
+  (case ger/org-state
+    (:show-all (org-overview)
+               (setq ger/org-state :overview))
+    (:overview (show-all)
+               (setq ger/org-state :show-all))))
 
 (defun ger-next-subject ()
   (interactive)

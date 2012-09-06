@@ -54,18 +54,22 @@
 
 (defvar ger-mode-map
   (lexical-let* ((map (make-sparse-keymap)))
+    ;; less like
+    (define-key map (kbd "f") 'scroll-down-command)
+    (define-key map (kbd "b") 'scroll-up-command)
+    (define-key map (kbd "h") 'left-char)
+    (define-key map (kbd "j") 'next-line)
+    (define-key map (kbd "k") 'previous-line)
+    (define-key map (kbd "l") 'right-char)
+    ;; common keybinds
+    (define-key map (kbd "u") 'ger-goto-url)
     (define-key map (kbd "q") 'ger-quit)
-    (define-key map (kbd "j") 'ger-next-subject)
-    (define-key map (kbd "k") 'ger-previous-subject)
-    (define-key map (kbd "t") 'org-shifttab)
-    (define-key map (kbd "h") 'ger-hide-org-buffer)
-    (define-key map (kbd "o") 'ger-open-org-buffer)
-    (define-key map (kbd "n") 'scroll-up-command)
-    (define-key map (kbd "p") 'scroll-down-command)
+    (define-key map (kbd "t") 'ger-toggle-show-and-overview)
+    (define-key map (kbd "n") 'ger-next-subject)
+    (define-key map (kbd "p") 'ger-previous-subject)
     (define-key map (kbd "v") 'scroll-up-command)
     (define-key map (kbd "c") 'scroll-down-command)
     (define-key map (kbd "i") 'org-cycle)
-    (define-key map (kbd "l") 'ger-goto-url)
     (define-key map (kbd "R") 'ger-reload)
     map))
 

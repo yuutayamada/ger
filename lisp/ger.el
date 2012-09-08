@@ -217,11 +217,11 @@
           mode-name "GR")
     (use-local-map ger-mode-map)))
 
-(defun ger-reload ()
+(defun ger-fetch ()
   (interactive)
-  (let* ((account (if (string< "" ger-gmail-account )
+  (let* ((account (if (string< "" ger-gmail-account)
                       (concat " --account=" ger-gmail-account)))
-         (command (concat ger-ruby-exe-path " reload" account))
+         (command (concat ger-ruby-exe-path " fetch" account))
          dir)
     (when ger-registering-dir
       (setq dir (concat " --directory=" (cd-absolute ger-registering-dir))

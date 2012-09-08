@@ -13,12 +13,12 @@
              ger-registering-dir "~/"
              ger-gmail-account "your-gmail-address")
        (autoload 'ger "ger")
+       (autoload 'ger-fetch "ger")
        (global-set-key (kbd "C-S-i") 'ger))
 
 ## To start using
-Note that Require downloading to google-reader-subscriptions.xml from 'http://www.google.com/reader/subscriptions/export?hl=ja'.
 
 Execute command from Emacs
 
-    M-x ger-reload (extract feed)
+    M-x ger-fetch  (fetch feeds)
     M-x ger        (display result)

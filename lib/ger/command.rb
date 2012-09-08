@@ -26,10 +26,10 @@ module Ger
       @google_reader = Ger::Api.new()
     end
 
-    desc 'reload', 'Update google-reader-subscriptions.xml'
+    desc 'fetch', 'Fetch feeds from google reader of your account'
     method_option "directory", type: :string, default: false, aliases: "-d"
     method_option "account", type: :string, default: false
-    def reload()
+    def fetch()
       @google_reader.account  = options["account"]
       rss = Ger::RssGenerator.new(extract_google_reader_xmls())
       rss.reload(options["directory"])

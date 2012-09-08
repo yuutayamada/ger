@@ -16,59 +16,34 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'thor'
-require 'ger/xml_parser'
 require 'ger/rss_generator'
+require 'ger/api'
 
 module Ger
   class Command < Thor
-
-    @@rss
-
     def initialize(*args)
       super
-      @parser                 = Ger::XmlParser.new
-      @generator              = Ger::RssGenerator.new
-      # memo: google_export = 'http://www.google.com/reader/subscriptions/export?hl=ja'
-      @google_reader_xml_path = Dir.home + "/Downloads/google-reader-subscriptions.xml"
+      @google_reader = Ger::Api.new()
     end
 
     desc 'reload', 'Update google-reader-subscriptions.xml'
     method_option "directory", type: :string, default: false, aliases: "-d"
-    method_option "google-xml-dir", type: :string, default: false, aliases: "-g"
+    method_option "account", type: :string, default: false
     def reload()
-      init(options["google-xml-dir"])
-      @@rss.reload(options["directory"])
-    end
-
-    desc 'status', 'show google_reader_xml_path'
-    def status()
-      puts @google_reader_xml_path
+      @google_reader.account  = options["account"]
+      rss = Ger::RssGenerator.new(extract_google_reader_xmls())
+      rss.reload(options["directory"])
     end
 
     private
 
-    def init(option=false)
-      @google_reader_xml_path = option["google-xml-dir"] if option && option["google-xml-dir"]
-      @@rss = RssGenerator.new(create_xml_enum(get_xmls, true))
-    end
-
-    # parse xml of google reader
-    def get_xmls()
-      @parser.parse(@google_reader_xml_path)
-      @parser.record
-    end
-
-    # @return list of title and xml
-    def create_xml_enum(xmls, xml_only=false)
-      result = []
-      xmls.each do |factor|
-        something = xml_only ? factor[:xmlUrl] : [factor[:text], factor[:xmlUrl]]
-        result << something
+    def extract_google_reader_xmls()
+      xmls = []
+      @google_reader.feeds.each do |feed|
+        url = feed.url
+        xmls << url if url =~ /\.xml$/
       end
-      result
+      xmls
     end
-
-    # TODO: create alias reload or update
-    # TODO: google reader database update
   end
 end

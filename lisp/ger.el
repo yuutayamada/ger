@@ -47,6 +47,8 @@
 (defvar ger-ruby-exe-path "")
 (defvar ger-registering-dir nil)
 (defvar ger-format-style :org)
+(defvar ger-gmail-account "")
+
 
 (defvar ger/windows-switch-window-number 2)
 
@@ -217,7 +219,9 @@
 
 (defun ger-reload ()
   (interactive)
-  (let* ((command (concat ger-ruby-exe-path " reload"))
+  (let* ((account (if (string< "" ger-gmail-account )
+                      (concat " --account=" ger-gmail-account)))
+         (command (concat ger-ruby-exe-path " reload" account))
          dir)
     (when ger-registering-dir
       (setq dir (concat " --directory=" (cd-absolute ger-registering-dir))

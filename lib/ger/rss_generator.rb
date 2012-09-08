@@ -23,7 +23,7 @@ module Ger
       begin
         current_url_and_index = ""
         @sources.each_with_index do |url, index|
-          make_rss_from(url) if url =~ /\.xml$/
+          make_rss_from(url)
         end
         @@record = JSON.pretty_generate(@@record)
         @@record = sort_json_by("date", @@record)
@@ -35,7 +35,7 @@ module Ger
 
     def reload(directory)
       specified_dir = directory || Dir.home
-      @rss_path = specified_dir + "/" + @@file_name
+      @rss_path = specified_dir.chomp("/") + "/" + @@file_name
       backup(@rss_path) if File.exist?(@rss_path)
       self.generate()
       open(@rss_path, "w:UTF-8") do |fp|
@@ -49,9 +49,9 @@ module Ger
       json.to_ary.each_with_index do |subject, index|
         item_and_index << [subject[item], index]
       end
-      sorted_item_and_index = item_and_index.sort_by {|item| item}.reverse # !> shadowing outer local variable - item
+      sorted_item_and_index = item_and_index.sort_by {|item| item}.reverse
       sorted = []
-      sorted_item_and_index.each_with_index do |item_and_index, this_index| # !> shadowing outer local variable - item_and_index
+      sorted_item_and_index.each_with_index do |item_and_index, this_index|
         content            = json.to_ary[item_and_index.last]
         sorted[this_index] = content
       end
@@ -98,6 +98,8 @@ module Ger
       rescue RSS::InvalidRSSError => e
         puts e.message + "\n  URL: " + url
         rss = RSS::Parser.parse(source, false)
+      rescue Errno::EHOSTUNREACH => e
+        puts e.message + "\n  URL: " + url
       end
     end
 
@@ -110,7 +112,7 @@ module Ger
         stetement.gsub!(/&amp;/, "&")
         stetement.gsub!(/<\/?[^>]*>|\n\n+/, "")
         stetement.gsub!(/  +/, " ")
-        stetement.sub!(/^\n ?/, "")
+        stetement.gsub!(/[\n\t] ?/, "")
       end
       stetement
     end

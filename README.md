@@ -1,8 +1,13 @@
 # Installation
+## Requirements
+This program require Ruby 1.9, Thor and GoogleReaderApi of Ruby Gem.
+
 ## To install from command line
 
     cd  YOUR-INSTALLATION-DIRECTORY
     git clone https://github.com/yuutayamada/ger
+    cd ./ger
+    bundle install
 
 ## Paste your .emacs .etc..
 

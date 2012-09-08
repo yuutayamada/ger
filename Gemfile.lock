@@ -1,0 +1,12 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    GoogleReaderApi (0.4.0)
+    thor (0.16.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  GoogleReaderApi (~> 0.4.0)
+  thor

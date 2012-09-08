@@ -7,10 +7,11 @@
 ## Paste your .emacs .etc..
 
     ;; lisp code Example
-    (let* ((ger-directory "~/.emacs.d/lisp/ger/")) <- set your ger directory
+    (let* ((ger-directory "~/.emacs.d/lisp/ger/"))
        (add-to-list 'load-path (concat ger-directory "lisp/"))
        (setq ger-ruby-exe-path (concat ger-directory "bin/ger")
-             ger-registering-dir "~/") ;; <- prefer directory
+             ger-registering-dir "~/"
+             ger-gmail-account "your-gmail-address")
        (autoload 'ger "ger")
        (global-set-key (kbd "C-S-i") 'ger))
 

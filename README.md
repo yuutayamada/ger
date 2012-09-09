@@ -23,6 +23,13 @@ This program require Ruby 1.9, Thor and GoogleReaderApi of Ruby Gem.
 
 ## To start using
 
+Execute shell below command
+
+    cd ger_instsll_directory/bin/
+    ./ger register
+
+Input your google reader account and password and created a feed object for google reader to ~/.gmail_feeds.
+
 Execute command from Emacs
 
     M-x ger-fetch  (fetch feeds)

@@ -5,10 +5,9 @@ require 'open-uri'
 require 'rss'
 require 'json'
 require 'fileutils'
-require 'ger/api'
-
 require 'nokogiri'
 require 'cgi'
+require 'ger/api'
 
 module Ger
   class RssGenerator
@@ -68,9 +67,6 @@ module Ger
     end
 
     def convert_string_from(html, factor)
-      require 'nokogiri'
-      require 'cgi'
-      require 'open-uri'
       content = CGI.unescapeHTML(html).to_s
       case factor
       when :title

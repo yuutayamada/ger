@@ -219,13 +219,10 @@
 
 (defun ger-fetch ()
   (interactive)
-  (let* ((account (if (string< "" ger-gmail-account)
-                      (concat " --account=" ger-gmail-account)))
-         (command (concat ger-ruby-exe-path " fetch" account))
-         dir)
-    (when ger-registering-dir
-      (setq dir (concat " --directory=" (cd-absolute ger-registering-dir))
-            command (concat command dir)))
-    (async-shell-command command)))
+  (let* ((command (concat ger-ruby-exe-path " fetch unread"))
+         (directory-option
+          (when ger-registering-dir
+            (concat " --directory=" (cd-absolute ger-registering-dir)))))
+    (async-shell-command (concat command directory-option))))
 
 (provide 'ger)

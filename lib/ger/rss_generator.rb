@@ -5,42 +5,34 @@ require 'open-uri'
 require 'rss'
 require 'json'
 require 'fileutils'
+require 'ger/api'
+
+require 'nokogiri'
+require 'cgi'
 
 module Ger
   class RssGenerator
     @@test_url = 'http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml'
-    @@record ||= []
     @@file_name =  ".ger.json"
 
     def initialize(sources = {test: @@test_url})
       @sources = sources.flatten
-      @rss_path
+      @rss_path = File.join(Dir.home, @@file_name)
+      @record = []
     end
 
     attr_accessor :sources
+    attr_accessor :record
+    attr_accessor :rss_path
 
-    def generate()
-      begin
-        current_url_and_index = ""
-        @sources.each_with_index do |url, index|
-          make_rss_from(url)
-        end
-        @@record = JSON.pretty_generate(@@record)
-        @@record = sort_json_by("date", @@record)
-        puts "Done! spawned Rss to #{@rss_path}"
-      rescue Encoding::UndefinedConversionError => e
-        puts e.message + current_url_and_index
-      end
-    end
-
-    def reload(directory)
+    def save(directory=false, record=false)
       specified_dir = directory || Dir.home
-      @rss_path = specified_dir.chomp("/") + "/" + @@file_name
+      @rss_path = File.join(specified_dir, @@file_name)
       backup(@rss_path) if File.exist?(@rss_path)
-      self.generate()
       open(@rss_path, "w:UTF-8") do |fp|
-        fp.write @@record
+        fp.write record
       end
+      puts "save! #{@rss_path}"
     end
 
     def sort_json_by(item, record)
@@ -58,77 +50,84 @@ module Ger
       JSON.pretty_generate(sorted)
     end
 
-    def to_time(text)
-      require 'date/format'
-      require 'time'
-      begin
-        array = Date._parse(text, false).values_at(:year, :mon, :mday,
-                                                   :hour, :min, :sec,
-                                                   :zone, :wday)
-        Time.mktime(*array)
-      rescue NoMethodError
-        n_days_ago(10)
-      rescue TypeError
-        n_days_ago(10)
+    def formatter(array_data)
+      response = []
+      array_data.each do |hash|
+        title = convert_string_from(hash[:title].to_s, :title).to_s
+        desc  = convert_string_from(hash[:description].to_s, :summary).to_s
+        link  = convert_string_from(hash[:link].to_s, :link).to_s
+        date  = convert_string_from(hash[:date].to_s, :date).to_s
+        response << {
+          title:       title,
+          description: desc,
+          link:        link,
+          date:        date
+        }
+      end
+      response
+    end
+
+    def convert_string_from(html, factor)
+      require 'nokogiri'
+      require 'cgi'
+      require 'open-uri'
+      content = CGI.unescapeHTML(html).to_s
+      case factor
+      when :title
+        (Nokogiri::HTML(content)/factor).text
+      when :summary
+        portion = (Nokogiri::HTML(content)/factor).text.to_s
+        portion.gsub!(/ +/, " ")
+        portion.gsub!(/[\n\t]/, "")
+      when :link
+        (Nokogiri::HTML(content)/:link).attribute("href").value
+      when :date
+        (Nokogiri::HTML(content)/:published).children.text
       end
     end
 
-    def n_days_ago(n)
-      Time.now.-(60 * 60 * 24 * n.to_i)
-    end
-
-    def make_rss_from(url)
+    # methods of item
+    # .entry => html output
+    #    TODO: extract summary and title by nokogiri
+    # .toggle_read => to_read?
+    # .toggle_like => to_like?
+    # .toggle_star => to_star?
+    # .taint?????
+    def extract_unread_items(user)
       begin
-        source = URI.parse(url)
-        rss = RSS::Parser.parse(source)
-        rss.items.each do |item|
-          def item.description() "" end unless defined? item.description
-          subset = {
-            title:       self.format(item.title.to_s),
-            description: self.format(item.description.to_s),
-            link:        self.format(item.link.to_s, true),
-            date:        to_time(item.date.to_s),
-          }
-          if n_days_ago(2) < subset[:date]
-            @@record << subset
+        err_obj = false
+        begin
+          user.feeds.each do |feed|
+            feed.all_unread_items.each do |item|
+              item.methods
+              html = item.entry
+              @record << {
+                title:       html.title,
+                description: html.summary,
+                link:        html.link,
+                date:        html.published,
+                id:          html.id
+              }
+            end
           end
+          if @record.empty?
+            puts "Record empty!.... usage restrictions??"
+          else
+            @record = sort_json_by("date", to_json(formatter(@record)))
+          end
+        rescue RuntimeError => e
+          puts e.message
+          puts err_obj
         end
+      rescue RuntimeError => e
+        puts "RuntimeError: " + e.message
       rescue NoMethodError => e
-        puts e.message + "\n  URL: " + url
-      rescue RSS::InvalidRSSError => e
-        puts e.message + "\n  URL: " + url
-        rss = RSS::Parser.parse(source, false)
-      rescue Errno::EHOSTUNREACH => e
-        puts e.message + "\n  URL: " + url
+        puts e.message
       end
     end
 
-    def format(stetement, link=false)
-      if link
-        stetement = stetement.match(/http.+/).to_s.chomp('"')
-      else
-        stetement.gsub!(/\"/, "")
-        stetement.gsub!(/&nbsp;/, " ")
-        stetement.gsub!(/&amp;/, "&")
-        stetement.gsub!(/<\/?[^>]*>|\n\n+/, "")
-        stetement.gsub!(/  +/, " ")
-        stetement.gsub!(/[\n\t] ?/, "")
-      end
-      stetement
-    end
-
-    def output()
-      if 0 == @@record.length
-        self.generate()
-      end
-      print @@record
-    end
-
-    def methods()
-      pretty_uri = URI.parse(@@test_url)
-      rss = RSS::Parser.parse(pretty_uri.read)
-      puts "SiteName : " + rss.channel.title
-      p rss.items[0].methods
+    def to_json(data)
+      JSON.pretty_generate(data)
     end
 
     def backup(file_name)

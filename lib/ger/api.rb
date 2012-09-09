@@ -9,10 +9,12 @@ module Ger
       @account  = account
       @password = password
       @user     = create_user()
+      @marshal_file = File.join(Dir.home, ".gmail_feeds")
     end
 
     attr_accessor :account
     attr_accessor :password
+    attr_accessor :user
 
     def create_user()
       user = nil
@@ -21,7 +23,7 @@ module Ger
                                               password: @password })
         user = GoogleReaderApi::User.new({auth: user_api.auth})
       end
-      user
+      @user = user
     end
 
     # @exmplle output feeds
@@ -32,20 +34,39 @@ module Ger
     #   end
     def feeds()
       begin
-        unless @account && @password
-          puts "Please, account or password"
-          @account  = query("account")  unless @account
-          unless @password
-            prefix = @account[0, 4]
-            suffix = @account.match(/@.+$/).to_s
-            @password = query("password for #{prefix}..#{suffix}")
-          end
-        end
-        @user = create_user() if @user == nil
+        register()
+        create_user() if @user == nil
         @user.feeds
       rescue NoMethodError => e
         puts e.message
       end
+    end
+
+    def register()
+      unless @account && @password
+        puts "Please, account and/or password"
+        @account  = query("account") unless @account
+        unless @password
+          prefix = @account[0, 4]
+          suffix = @account.match(/@.+$/).to_s
+          @password = query("password for #{prefix}..#{suffix}")
+        end
+      end
+      create_user()
+    end
+
+    def marshal(object)
+      File.open @marshal_file, "wb" do |file|
+        Marshal.dump object, file
+      end
+    end
+
+    def demarshal()
+      feeds = nil
+      File.open @marshal_file, "rb" do |file|
+        feeds = Marshal.load file
+      end
+      @user = feeds
     end
 
     def query(message)

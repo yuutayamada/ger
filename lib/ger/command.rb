@@ -21,23 +21,63 @@ require 'ger/api'
 
 module Ger
   class Command < Thor
+
+    @@record
+
     def initialize(*args)
       super
       @google_reader = Ger::Api.new()
+      @user          = @google_reader.demarshal()
+      @rss           = Ger::RssGenerator.new()
     end
 
     desc 'fetch', 'Fetch feeds from google reader of your account'
     method_option "directory", type: :string, default: false, aliases: "-d"
     method_option "account", type: :string, default: false
-    def fetch()
-      @google_reader.account  = options["account"]
-      rss = Ger::RssGenerator.new(extract_google_reader_xmls())
-      rss.reload(options["directory"])
+    def fetch(command=false)
+      case command
+      when "unread"
+        save_unread_items()
+      when "old-type"
+        @google_reader.account = options["account"]
+        rss = Ger::RssGenerator.new(extract_google_reader_xmls())
+        rss.save_json_data(options["directory"])
+      end
+    end
+
+    desc 'register', 'Register feeds from google reader of your account'
+    def register()
+      @google_reader.register()
+      @google_reader.marshal(@google_reader.user)
+    end
+
+    desc 'read_items', 'wip'
+    def read_items
+      @@record = []
+      @user.feeds.each do |feed|
+        @@record << feed.read_items
+      end
+      puts @@record
+    end
+
+    desc 'display', 'display feeds list'
+    def display
+      begin
+        puts @user.feeds
+      rescue SocketError => e
+        puts "SocketError" + e.message
+      end
     end
 
     private
 
-    def extract_google_reader_xmls()
+    def save_unread_items
+      dir = options["directory"] ? options["directory"] : false
+      @rss.extract_unread_items(@user)
+      @rss.save(dir, @rss.record)
+    end
+
+    def extract_google_reader_xmls
       xmls = []
       @google_reader.feeds.each do |feed|
         url = feed.url

@@ -38,10 +38,6 @@ module Ger
       case command
       when "unread"
         save_unread_items()
-      when "old-type"
-        @google_reader.account = options["account"]
-        rss = Ger::RssGenerator.new(extract_google_reader_xmls())
-        rss.save_json_data(options["directory"])
       end
     end
 
@@ -72,18 +68,9 @@ module Ger
     private
 
     def save_unread_items
-      dir = options["directory"] ? options["directory"] : false
+      directory = options["directory"] ? options["directory"] : false
       @rss.extract_unread_items(@user)
-      @rss.save(dir, @rss.record)
-    end
-
-    def extract_google_reader_xmls
-      xmls = []
-      @google_reader.feeds.each do |feed|
-        url = feed.url
-        xmls << url if url =~ /\.xml$/
-      end
-      xmls
+      @rss.save(directory, @rss.record)
     end
   end
 end

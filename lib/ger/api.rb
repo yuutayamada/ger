@@ -15,15 +15,21 @@ module Ger
     attr_accessor :account
     attr_accessor :password
     attr_accessor :user
+    attr_accessor :marshal_file
 
     def create_user()
-      user = nil
-      if @account && @password
-        user_api = GoogleReaderApi::Api.new({ email:    @account,
-                                              password: @password })
-        user = GoogleReaderApi::User.new({auth: user_api.auth})
+      begin
+        user = nil
+        if @account && @password
+          user_api = GoogleReaderApi::Api.new({ email:    @account,
+                                                password: @password })
+          user = GoogleReaderApi::User.new({auth: user_api.auth})
+        end
+        @user = user
+      rescue GoogleLogin::ClientLogin::BadAuthentication => e
+        puts e.message
+        puts "mistaken account or password?"
       end
-      @user = user
     end
 
     # @exmplle output feeds
@@ -62,11 +68,16 @@ module Ger
     end
 
     def demarshal()
-      feeds = nil
-      File.open @marshal_file, "rb" do |file|
-        feeds = Marshal.load file
+      begin
+        feeds = nil
+        File.open @marshal_file, "rb" do |file|
+          feeds = Marshal.load file
+        end
+        @user = feeds
+      rescue Errno::ENOENT => e
+        puts "marshal file: " + @marshal_file
+        puts e.message
       end
-      @user = feeds
     end
 
     def query(message)

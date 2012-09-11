@@ -60,7 +60,8 @@ module Ger
           title:       title,
           description: desc,
           link:        link,
-          date:        date
+          date:        date,
+          id:          hash[:id].to_s
         }
       end
       response

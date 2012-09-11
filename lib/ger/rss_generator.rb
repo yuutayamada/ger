@@ -74,8 +74,8 @@ module Ger
         (Nokogiri::HTML(content)/factor).text
       when :summary
         portion = (Nokogiri::HTML(content)/factor).text.to_s
-        portion.gsub!(/ +/, " ")
-        portion.gsub!(/[\n\t]/, "")
+        # portion.gsub!(/ +/, " ")
+        # portion.gsub!(/[\n\t]/, "")
       when :link
         (Nokogiri::HTML(content)/:link).attribute("href").value
       when :date

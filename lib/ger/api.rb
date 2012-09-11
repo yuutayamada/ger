@@ -28,7 +28,7 @@ module Ger
         @user = user
       rescue GoogleLogin::ClientLogin::BadAuthentication => e
         puts e.message
-        puts "mistaken account or password?"
+        puts "Mistaken account or password?"
       end
     end
 

@@ -61,9 +61,9 @@ module Ger
       create_user()
     end
 
-    def marshal(object)
+    def marshal(token_object)
       File.open @marshal_file, "wb" do |file|
-        Marshal.dump object, file
+        Marshal.dump token_object, file
       end
     end
 

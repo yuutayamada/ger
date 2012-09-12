@@ -83,13 +83,6 @@ module Ger
       end
     end
 
-    # methods of item
-    # .entry => html output
-    #    TODO: extract summary and title by nokogiri
-    # .toggle_read => to_read?
-    # .toggle_like => to_like?
-    # .toggle_star => to_star?
-    # .taint?????
     def extract_unread_items(user)
       begin
         err_obj = false

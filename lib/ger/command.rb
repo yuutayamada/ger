@@ -56,6 +56,17 @@ module Ger
       puts @@record
     end
 
+    desc 'remove',
+    'remove [ID] : remove feed that was already read of id, must be
+     specify the id to argument of first'
+    def remove(id=false)
+      if id
+        @google_reader.remove_feed_of_id(@user, id.to_s)
+      else
+        puts "Require ID : $ ger remove [Feed ID]"
+      end
+    end
+
     desc 'feeds', 'display feeds list'
     def feeds
       begin

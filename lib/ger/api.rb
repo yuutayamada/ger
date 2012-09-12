@@ -87,5 +87,37 @@ module Ger
       system "stty echo"
       result
     end
+
+    # @wip
+    def remove_feed_of_id(user, id)
+      user.feeds.each do |feed|
+        feed.all_unread_items.each do |item|
+          if item.entry.id.to_s == id.to_s
+            puts "Match ID: \n  #{id}"
+            handle(item, :to_read)
+          end
+        end
+      end
+    end
+
+    # .toggle_read => to_read?
+    # .toggle_like => to_like?
+    # .toggle_star => to_star?
+    # .taint?????
+    def handle(item, hand)
+      begin
+        case hand
+        when :to_read
+          item.toggle_read
+        when :to_like
+          item.toggle_like
+        when :to_star
+          item.toggle_star
+        end
+      rescue RuntimeError => e
+        puts e.message
+      end
+    end
+
   end
 end

@@ -56,8 +56,8 @@ module Ger
       puts @@record
     end
 
-    desc 'display', 'display feeds list'
-    def display
+    desc 'feeds', 'display feeds list'
+    def feeds
       begin
         puts @user.feeds
       rescue SocketError => e

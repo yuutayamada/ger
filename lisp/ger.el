@@ -177,20 +177,21 @@
 
 (defun ger-format (feed)
   (loop with format
-        with ti and de and li and dt
-        for (title description link date) in (list feed) do
+        with ti and de and li and dt and dt+id
+        for (title description link date id) in (list feed) do
         (setq ti (concat "* " title
                          (unless (string-match "\\w" description)
                            " :E:"))
               de (concat "** " description)
               li (concat "** link [[" link "][...]]")
               dt (concat "** " date)
-              format (list ti de li dt))
+              dt+id (concat dt " [[" id "][id]]")
+              format (list ti de li dt+id))
         finally return (mapconcat 'identity format "\n")))
 
 (defun ger-extract-subject (factors)
   (loop with content = '()
-        with title and description and link and date
+        with title and description and link and date and id
         for (subject . statement) in factors do
         (case subject
           ('title       (ger-fontify      statement 'Info-title-3-face)
@@ -198,8 +199,9 @@
           ('description (setq description statement))
           ('link        (ger-fontify      statement 'link)
                         (setq link        statement))
-          ('date        (setq date        statement)))
-        finally return (ger-format `(,title ,description ,link ,date))))
+          ('date        (setq date        statement))
+          ('id          (setq id          statement)))
+        finally return (ger-format `(,title ,description ,link ,date ,id))))
 
 (defun ger-fontify (word &optional face)
   (let* ((length (length word)))

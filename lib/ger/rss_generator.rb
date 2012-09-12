@@ -85,29 +85,24 @@ module Ger
 
     def extract_unread_items(user)
       begin
-        err_obj = false
-        begin
-          user.feeds.each do |feed|
-            feed.all_unread_items.each do |item|
-              item.methods
-              html = item.entry
-              @record << {
-                title:       html.title,
-                description: html.summary,
-                link:        html.link,
-                date:        html.published,
-                id:          html.id
-              }
-            end
+        user.feeds.each do |feed|
+          feed.all_unread_items.each do |item|
+            item.methods
+            html = item.entry
+            @record << {
+              title:       html.title,
+              description: html.summary,
+              link:        html.link,
+              date:        html.published,
+              id:          html.id
+            }
           end
-          if @record.empty?
-            puts "Record empty!.... usage restrictions??"
-          else
-            @record = sort_json_by("date", to_json(formatter(@record)))
-          end
-        rescue RuntimeError => e
-          puts e.message
-          puts err_obj
+        end
+
+        unless @record.empty?
+          @record = sort_json_by("date", to_json(formatter(@record)))
+        else
+          puts "Record empty!.... usage restrictions??"
         end
       rescue RuntimeError => e
         puts "RuntimeError: " + e.message

@@ -72,6 +72,7 @@
     (define-key map (kbd "v") 'scroll-up-command)
     (define-key map (kbd "c") 'scroll-down-command)
     (define-key map (kbd "i") 'org-cycle)
+    (define-key map (kbd "r") 'ger-remove-item)
     (define-key map (kbd "R") 'ger-reload)
     map))
 
@@ -218,6 +219,36 @@
     (setq major-mode 'ger-mode
           mode-name "GR")
     (use-local-map ger-mode-map)))
+
+(defun ger-beginning-of-item ()
+  (beginning-of-line)
+  (while (not (looking-at "^*[ \n\t]"))
+    (beginning-of-line)
+    (line-move -1)))
+
+(defun ger-remove-item ()
+  (interactive)
+  (lexical-let*
+      (id
+       (remove (lambda ()
+                 (re-search-forward "<id>.*</id>" nil nil 1)
+                 (setq id (match-string 0))
+                 (if (stringp id)
+                     (async-shell-command
+                      (concat ger-ruby-exe-path " remove \"" id "\""))
+                   (error "ID is not string!")))))
+    (save-excursion
+      (ger-beginning-of-item)
+      (set-mark-command nil)
+      (condition-case error
+          (funcall remove)
+        (error error))
+      (ger-next-subject)
+      (line-move -1)
+      (end-of-line)
+      (setq buffer-read-only nil)
+      (kill-region (point) (mark))
+      (setq buffer-read-only t))))
 
 (defun ger-fetch ()
   (interactive)

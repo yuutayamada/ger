@@ -76,6 +76,11 @@ module Ger
       end
     end
 
+    desc 'id_exist?', 'for test'
+    def id_exist(id=false)
+      @google_reader.id_exist?(id) if id
+    end
+
     private
 
     def save_unread_items

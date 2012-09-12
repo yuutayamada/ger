@@ -119,5 +119,14 @@ module Ger
       end
     end
 
+    def id_exist?(id)
+      user.feeds.each do |feed|
+        feed.all_unread_items.each do |item|
+          if item.entry.id.to_s == id.to_s
+            puts "this ID exist!!"
+          end
+        end
+      end
+    end
   end
 end

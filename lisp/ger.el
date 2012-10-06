@@ -57,8 +57,8 @@
 (defvar ger-mode-map
   (lexical-let* ((map (make-sparse-keymap)))
     ;; less like
-    (define-key map (kbd "b") 'scroll-down-command)
     (define-key map (kbd "f") 'scroll-up-command)
+    (define-key map (kbd "b") 'scroll-down-command)
     (define-key map (kbd "h") 'left-char)
     (define-key map (kbd "j") 'next-line)
     (define-key map (kbd "k") 'previous-line)

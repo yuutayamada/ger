@@ -22,8 +22,6 @@ require 'ger/api'
 module Ger
   class Command < Thor
 
-    @@record
-
     def initialize(*args)
       super
       @google_reader = Ger::Api.new()
@@ -50,11 +48,11 @@ module Ger
 
     desc 'read_items', 'wip'
     def read_items
-      @@record = []
+      record = []
       @user.feeds.each do |feed|
-        @@record << feed.read_items
+        record << feed.read_items
       end
-      puts @@record
+      puts record
     end
 
     desc 'remove',

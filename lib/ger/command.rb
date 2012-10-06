@@ -32,8 +32,8 @@ module Ger
     end
 
     desc 'fetch', 'Fetch feeds from google reader of your account'
-    method_option "directory", type: :string, default: false, aliases: "-d"
-    method_option "account", type: :string, default: false
+    method_option "directory", type: :string,  default: false, aliases: "-d"
+    method_option "account",   type: :string,  default: false
     method_option "verbose",   type: :boolean, default: false
     def fetch(command=false)
       case command

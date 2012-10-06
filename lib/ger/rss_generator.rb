@@ -83,10 +83,11 @@ module Ger
       end
     end
 
-    def extract_unread_items(user)
+    def extract_unread_items(user, verbose=false)
       begin
         user.feeds.each do |feed|
           feed.all_unread_items.each do |item|
+            puts item if verbose
             item.methods
             html = item.entry
             @record << {

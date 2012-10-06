@@ -256,6 +256,6 @@
          (directory-option
           (when ger-registering-dir
             (concat " --directory=" (cd-absolute ger-registering-dir)))))
-    (async-shell-command (concat command directory-option))))
+    (async-shell-command (concat command " --verbose" directory-option))))
 
 (provide 'ger)

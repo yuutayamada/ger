@@ -34,10 +34,11 @@ module Ger
     desc 'fetch', 'Fetch feeds from google reader of your account'
     method_option "directory", type: :string, default: false, aliases: "-d"
     method_option "account", type: :string, default: false
+    method_option "verbose",   type: :boolean, default: false
     def fetch(command=false)
       case command
       when "unread"
-        save_unread_items()
+        save_unread_items(options["verbose"])
       end
     end
 
@@ -83,9 +84,9 @@ module Ger
 
     private
 
-    def save_unread_items
+    def save_unread_items(verbose=false)
       directory = options["directory"] ? options["directory"] : false
-      @rss.extract_unread_items(@user)
+      @rss.extract_unread_items(@user, verbose)
       @rss.save(directory, @rss.record)
     end
   end

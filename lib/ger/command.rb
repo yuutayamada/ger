@@ -86,6 +86,7 @@ module Ger
 
     def save_unread_items(verbose=false)
       directory = options["directory"] ? options["directory"] : false
+      puts "directory option : #{directory.to_s}" if directory
       @rss.extract_unread_items(@user, verbose)
       @rss.save(directory, @rss.record)
     end

@@ -73,7 +73,7 @@ module Ger
       when :title
         (Nokogiri::HTML(content)/factor).text
       when :summary
-        portion = (Nokogiri::HTML(content)/factor).text.to_s
+        (Nokogiri::HTML(content)/factor).text.to_s
       when :link
         (Nokogiri::HTML(content)/:link).attribute("href").value
       when :date

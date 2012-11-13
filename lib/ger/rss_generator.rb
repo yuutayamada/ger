@@ -89,14 +89,7 @@ module Ger
           feed.all_unread_items.each do |item|
             puts item if verbose
             item.methods
-            html = item.entry
-            @record << {
-              title:       html.title,
-              description: html.summary,
-              link:        html.link,
-              date:        html.published,
-              id:          html.id
-            }
+            store_feed(item.entry)
           end
         end
 
@@ -123,5 +116,16 @@ module Ger
       FileUtils.cp(file_name, file_name+"_bk")
       FileUtils.rm(file_name)
     end
+
+    def store_feed(html)
+        @record << {
+          title:       html.title,
+          description: html.summary,
+          link:        html.link,
+          date:        html.published,
+          id:          html.id
+        }
+    end
+
   end
 end

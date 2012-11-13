@@ -31,7 +31,7 @@ module Ger
       open(@rss_path, "w:UTF-8") do |fp|
         fp.write record
       end
-      puts "save! #{@rss_path}"
+      puts "Store feeds to #{@rss_path}"
     end
 
     def sort_json_by(item, record)

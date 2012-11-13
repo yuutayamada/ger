@@ -8,14 +8,17 @@ require 'fileutils'
 require 'nokogiri'
 require 'cgi'
 require 'ger/api'
+require 'date'
 
 module Ger
   class RssGenerator
     @@file_name =  ".ger.json"
 
-    def initialize()
+    def initialize(day=1)
       @rss_path = File.join(Dir.home, @@file_name)
       @record = []
+      #Catch up feed from X day ago
+      @x_days_ago = DateTime.now - day
     end
 
     attr_accessor :record
@@ -113,6 +116,7 @@ module Ger
     end
 
     def store_feed(html)
+      if inside_of_term?(html.published)
         @record << {
           title:       html.title,
           description: html.summary,
@@ -120,7 +124,12 @@ module Ger
           date:        html.published,
           id:          html.id
         }
+      end
     end
 
+    def inside_of_term?(published_time)
+      feed = DateTime.strptime(published_time.content.to_s, "%Y-%m-%dT%H:%M:%S")
+      feed > @x_days_ago ? true : false
+    end
   end
 end

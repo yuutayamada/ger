@@ -11,16 +11,13 @@ require 'ger/api'
 
 module Ger
   class RssGenerator
-    @@test_url = 'http://www.nytimes.com/services/xml/rss/nyt/GlobalHome.xml'
     @@file_name =  ".ger.json"
 
-    def initialize(sources = {test: @@test_url})
-      @sources = sources.flatten
+    def initialize()
       @rss_path = File.join(Dir.home, @@file_name)
       @record = []
     end
 
-    attr_accessor :sources
     attr_accessor :record
     attr_accessor :rss_path
 

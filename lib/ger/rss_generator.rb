@@ -52,10 +52,10 @@ module Ger
     def formatter(array_data)
       response = []
       array_data.each do |hash|
-        title = convert_string_from(hash[:title].to_s, :title).to_s
+        title = convert_string_from(hash[:title].to_s,       :title).to_s
         desc  = convert_string_from(hash[:description].to_s, :summary).to_s
-        link  = convert_string_from(hash[:link].to_s, :link).to_s
-        date  = convert_string_from(hash[:date].to_s, :date).to_s
+        link  = convert_string_from(hash[:link].to_s,        :link).to_s
+        date  = convert_string_from(hash[:date].to_s,        :date).to_s
         response << {
           title:       title,
           description: desc,
